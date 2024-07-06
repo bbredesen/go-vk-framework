@@ -1,0 +1,4 @@
+github.com/bbredesen/go-vk v1.3.270-0.3.2 h1:Ea12kWFt4brU4gtHfQg+c8lnzx9HmfP1NBZBV3WVROc=
+github.com/bbredesen/go-vk v1.3.270-0.3.2/go.mod h1:/EeS73bQon2oAIADH//1ceElCl+YxodjpfN4u12JcUs=
+golang.org/x/sys v0.6.0 h1:MVltZSvRTcU2ljQOhs94SXPftV6DCNnZViHeQps87pQ=
+golang.org/x/sys v0.6.0/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
