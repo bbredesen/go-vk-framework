@@ -15,10 +15,9 @@ type App interface {
 	SetWindowParams(width, height, left, top int)
 
 	GetEventChannel() <-chan EventMessage
-	// GetHandleForSurface returns the OS-specific handle that can be used to create a vk.SurfaceKHR.
-	// The handle returned by this function will be 0 before Run() has been called and after Run() completes.
-	// The handle will also be embedded in the window creation message (ET_Sys_Created).
-	// GetHandleForSurface() uintptr
+
+	// Run starts the OS window message loop. This needs to be called from the main thread and will block until
+	// the window is closed.
 	Run() error
 
 	// OkToClose notifies the window system that it is ok to close the window at this point in time. This should be
@@ -30,6 +29,8 @@ type App interface {
 
 	GetRequiredInstanceExtensions() []string
 
+	// Creates a surface for the window that has been opened and returns the SurfaceKHR handle. Delegates to
+	// OS-specific code so that the user application can run independent from the host OS.
 	DelegateCreateSurface(instance vk.Instance) (vk.SurfaceKHR, error)
 }
 
@@ -58,4 +59,47 @@ func (app *sharedApp) SetWindowParams(width, height, left, top int) {
 	app.reqHeight = height
 	app.reqLeft = left
 	app.reqTop = top
+}
+
+func (app *sharedApp) ExampleMessageLoop() {
+	ch := app.GetEventChannel()
+	m := <-ch // Block on the channel until the window has been created
+
+	if m.Type != ET_Sys_Created {
+		panic("expected ET_Sys_Create to start message loop")
+	}
+
+	// This is where you would create an instance, surface, set up the swapchain, etc. Your app should
+	// contain all of your Vulkan handles, state, etc.
+	// app.InitVulkan()
+
+	for {
+	messageLoop:
+		for {
+			select {
+			case m = <-ch:
+				switch m.Type {
+				case ET_Sys_Closed:
+					// This is where you would cleanup and destroy all Vulkan objects
+					// app.CleanupVulkan()
+
+					// sharedApp does not implement framework.App, but windowsApp, darwinApp, etc. do.
+					// Your app should embed the framework.App interface returned from calling
+					// framework.NewApp("Window Title"), which will give you access to OkToClose
+					// app.OkToClose(m.SystemEvent.HandleForSurface)
+					return
+
+				case ET_Mouse_Move:
+					// fmt.Println("mouse move recieved")
+
+				}
+			default: // Channel is empty
+				break messageLoop
+
+			}
+		}
+
+		// After handling all messages in the queue, you can draw a frame
+		// app.drawFrame()
+	}
 }
