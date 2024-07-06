@@ -1,6 +1,6 @@
 //go:build darwin
 
-package shared
+package framework
 
 /*
 #cgo LDFLAGS: -framework Cocoa -framework QuartzCore -L delegate/ -ldelegate

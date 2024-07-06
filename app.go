@@ -1,4 +1,4 @@
-package shared
+package framework
 
 import (
 	"github.com/bbredesen/go-vk"

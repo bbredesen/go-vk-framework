@@ -1,4 +1,4 @@
-package shared
+package framework
 
 /*
 #include "delegate/go_bridge.h"

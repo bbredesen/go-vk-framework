@@ -1,4 +1,4 @@
-package shared
+package framework
 
 type EventType int
 
